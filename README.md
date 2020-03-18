@@ -13,6 +13,8 @@ W zadaniu wykorzystam moduł języka Python - [multiprocessing](https://docs.pyt
   - [Opis zadania](#opis-zadania)
     - [Do zbadania eksperymentalnie](#do-zbadania-eksperymentalnie)
     - [Do przeanalizowania](#do-przeanalizowania)
+  - [Realizacja zadania](#realizacja-zadania)
+    - [Model systemu](#model-systemu)
 
 ## Opis zadania
 
@@ -39,3 +41,13 @@ Należy samodzielnie przeanalizować, która część napisanego programu może 
 3. Warto porównać z watkami.
 4. Porównać uruchamianie na kilku maszynach oraz na jednej maszynie z kilkoma rdzeniami? Czy warto stosować algorytm rozproszony sieciowo? Kiedy?
 5. Jak ważna w tym modelu jest prędkość komunikacji miedzy węzłami?
+
+## Realizacja zadania
+
+Opis wykonania zadania oraz decyzji podjętych przy projektowaniu programu.
+
+### Model systemu
+
+Diagram obrazujący budowę oraz opis kroków działania systemu.
+
+<img src="./Modele/Model_dzialania_i_architektury.svg">
