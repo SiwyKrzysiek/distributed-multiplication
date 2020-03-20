@@ -92,6 +92,8 @@ print(vektor.copy()[:10])
 
 # ---------- Create tasks ---------- #
 # Matrix will be divided into groups of rows to multiply
+# Single task is a list of pairs of row number in original matrix and row data
+# Worker can multiply matrix row and vectro from shared memory to create singe value of result
 
 
 def create_tasks(matrix, taks_count) -> Iterable[tuple]:
