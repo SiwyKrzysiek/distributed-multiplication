@@ -88,7 +88,7 @@ vektor.extend(loadMatrix(VECTOR_FILE_NAME))
 # print(matrix)
 
 # print(len(manager.get_vector()))
-print(vektor.copy()[:10])
+# print(vektor.copy()[:10])
 
 # ---------- Create tasks ---------- #
 # Matrix will be divided into groups of rows to multiply
@@ -101,12 +101,22 @@ def create_tasks(matrix, taks_count) -> Iterable[tuple]:
         yield [(j, matrix[j]) for j in range(*row_range)]
 
 
+# TODO: Iterate once
 tasks = list(create_tasks(matrix, TASK_COUNT))
-print(len(tasks))
 for task in tasks:
-    jobs = task[:5]
-    for job in jobs:
-        pass
-        print(type(job))
-        # print(job[1])
-        print(f'({job[0]}, {job[1][:10]}...)')
+    tasks_queue.put(task)
+
+# print(len(tasks))
+# for task in tasks:
+#     jobs = task[:5]
+#     for job in jobs:
+#         pass
+#         print(type(job))
+#         # print(job[1])
+#         print(f'({job[0]}, {job[1][:10]}...)')
+
+# TODO: Readable and wait for all results
+# print(dir(tasks_queue))
+tasks_queue.join()
+
+print('All tasks are done')

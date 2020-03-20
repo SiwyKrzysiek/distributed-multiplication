@@ -1,6 +1,6 @@
 # Proces responsible for creating shared queues
 
-from multiprocessing import Queue
+from multiprocessing import Queue, JoinableQueue
 from multiprocessing.managers import BaseManager
 
 # Server settings
@@ -12,7 +12,7 @@ class CalculationManager(BaseManager):
     """Shared manager class"""
 
 
-tasks_queue = Queue()
+tasks_queue = JoinableQueue()
 results_queue = Queue()
 vector = []
 CalculationManager.register(
