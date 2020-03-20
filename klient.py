@@ -3,7 +3,7 @@
 
 from sys import exit
 from multiprocessing.managers import BaseManager
-from typing import List, Tuple
+from typing import List, Tuple, Iterable
 import math
 
 # TODO: Load as parameters
@@ -91,4 +91,26 @@ vektor.extend(loadMatrix(VECTOR_FILE_NAME))
 print(vektor.copy()[:10])
 
 # ---------- Create tasks ---------- #
-# Matrix will be divided into groups of rows
+# Matrix will be divided into groups of rows to multiply
+
+
+def create_tasks(matrix, taks_count) -> Iterable[tuple]:
+    for row_range in split_to_ranges(len(matrix), taks_count):
+        task = []
+        start, end = row_range
+
+        for j in range(start, end):
+            task.append((j, matrix[j]))
+
+        yield task
+
+
+tasks = list(create_tasks(matrix, TASK_COUNT))
+print(len(tasks))
+for task in tasks:
+    jobs = task[:5]
+    for job in jobs:
+        pass
+        print(type(job))
+        # print(job[1])
+        print(f'({job[0]}, {job[1][:10]}...)')
