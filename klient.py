@@ -96,13 +96,7 @@ print(vektor.copy()[:10])
 
 def create_tasks(matrix, taks_count) -> Iterable[tuple]:
     for row_range in split_to_ranges(len(matrix), taks_count):
-        task = []
-        start, end = row_range
-
-        for j in range(start, end):
-            task.append((j, matrix[j]))
-
-        yield task
+        yield [(j, matrix[j]) for j in range(*row_range)]
 
 
 tasks = list(create_tasks(matrix, TASK_COUNT))
