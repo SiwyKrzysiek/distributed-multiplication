@@ -3,7 +3,9 @@
 # multiplied by vector
 
 from multiprocessing.managers import BaseManager
+from multiprocessing import Pool
 from time import sleep
+from typing import Tuple, List
 
 # TODO: Load as parameters
 # Server connection data
@@ -34,13 +36,31 @@ tasks_queue = manager.get_tasks_queue()
 results_queue = manager.get_results_queue()
 vector = manager.get_vector().copy()
 
+
+def process_job(job: Tuple[int, List[float]]) -> Tuple[int, float]:
+    """Process single job from task"""
+    global vector
+
+    return (job[0], 17.)
+
+
+# Create subprocess for each CPU core/thread
+pool = Pool()
+
 while not tasks_queue.empty():
     task = tasks_queue.get()
 
     # Simulate task processing
     print('Working on task')
-    sleep(1)
+    print(task)
+    # sleep(1)
+    finished_jobs = pool.map(process_job, task)
     print('Task done')
 
-    results_queue.put(7)
+    print(finished_jobs)
+    print()
+
+    results_queue.put(finished_jobs)
     tasks_queue.task_done()
+
+pool.close()
