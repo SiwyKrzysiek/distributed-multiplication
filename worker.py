@@ -7,12 +7,21 @@ from multiprocessing import Pool
 import queue
 from sys import exit
 from typing import Tuple, List
+import argparse
 
-# TODO: Load as parameters
+parser = argparse.ArgumentParser()
+parser.add_argument('-a', '--address', type=str,
+                    help='Select server address. Defaults to localhost', default='127.0.0.1')
+parser.add_argument('-p', '--serverPort', type=int,
+                    help='Set server port', default=2332)
+parser.add_argument('-k', '--key', type=str,
+                    help='Set server key', default='key')
+args = parser.parse_args()
+
 # Server connection data
-SERVER_ADRES = '127.0.0.1'
-SERVER_PORT = 2332
-SERVER_KEY = b'key'
+SERVER_ADRES = args.address
+SERVER_PORT = args.serverPort
+SERVER_KEY = args.key.encode()
 
 
 class CalculationManager(BaseManager):
@@ -28,6 +37,8 @@ manager = CalculationManager(
     address=(SERVER_ADRES, SERVER_PORT), authkey=SERVER_KEY)
 
 try:
+    print(
+        f'Connecting to server {SERVER_ADRES}:{SERVER_PORT} with key "{SERVER_KEY.decode()}"')
     manager.connect()
 except ConnectionRefusedError:
     print("Nie udało się połączyć z serwerem")
