@@ -15,6 +15,7 @@ W zadaniu wykorzystam moduł języka Python - [multiprocessing](https://docs.pyt
     - [Do przeanalizowania](#do-przeanalizowania)
   - [Realizacja zadania](#realizacja-zadania)
     - [Model systemu](#model-systemu)
+    - [Przykład działania](#przykład-działania)
 
 ## Opis zadania
 
@@ -51,3 +52,91 @@ Opis wykonania zadania oraz decyzji podjętych przy projektowaniu programu.
 Diagram obrazujący budowę oraz opis kroków działania systemu.
 
 <img src="./Modele/Model_dzialania_i_architektury.svg">
+
+### Przykład działania
+
+Pierwszym krokiem jest uruchomienie serwera. Jako argumenty można podać numer portu i klucz używany połączeniu lub zostawić wartości domyślne.
+
+Argumenty server.py
+
+```bash
+➜ python3 server.py -h 
+usage: server.py [-h] [-p PORT] [-k KEY]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -p PORT, --port PORT  Set server port
+  -k KEY, --key KEY     Set server key
+```
+
+Przykładowe uruchomienie
+
+```bash
+python3 server.py
+```
+
+Serwer udostępnia wspólne zasoby takie jak kolejki, które są wykorzystywane przez klienta i workerów.
+
+Następnie można uruchomić dowolną liczbę workerów w trybie ciągłej pracy (flaga `-c`) lub klienta.
+
+Klient wymaga podania pliku z macierzą i wektorem oraz ewentualnie adresu serwera.
+
+```bash
+➜ python3 klient.py -h                         
+usage: klient.py [-h] [-a ADDRESS] [-p SERVERPORT] [-k KEY] [-t TASKS]
+                 [-o OUTPUT]
+                 matrix vector
+
+positional arguments:
+  matrix                Path to file with input matrix
+  vector                Path to file with input vector
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -a ADDRESS, --address ADDRESS
+                        Select server address. Defaults to localhost
+  -p SERVERPORT, --serverPort SERVERPORT
+                        Set server port
+  -k KEY, --key KEY     Set server key
+  -t TASKS, --tasks TASKS
+                        Number of tasks that will be created
+  -o OUTPUT, --output OUTPUT
+                        Path to file in which to store results. If not
+                        provided vector is just displayed.
+```
+
+Przykładowe uruchomienie
+
+```bash
+python3 klient.py A.dat X.dat -t 20 -a 127.0.0.1
+```
+
+Ostatnim procesem jest uruchomienie dowolnej liczby wrokerów.
+
+Worker przyjmuje adres serwera.
+
+```bash
+➜ python3 worker.py -h
+usage: worker.py [-h] [-a ADDRESS] [-p SERVERPORT] [-k KEY] [-e]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -a ADDRESS, --address ADDRESS
+                        Select server address. Defaults to localhost
+  -p SERVERPORT, --serverPort SERVERPORT
+                        Set server port
+  -k KEY, --key KEY     Set server key
+  -e, --endless         Don't stop when there are no tasks
+```
+
+Przykładowe uruchomienie
+
+```bash
+python3 worker.py -a 127.0.0.1
+```
+
+Workera można też uruchomić w trybie ciągłego oczekiwania na zadania.
+
+```bash
+python3 worker.py -a 127.0.0.1 -e
+```
