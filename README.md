@@ -140,3 +140,7 @@ Workera można też uruchomić w trybie ciągłego oczekiwania na zadania.
 ```bash
 python3 worker.py -a 127.0.0.1 -e
 ```
+
+Po przetworzeniu wszystkich zadań _Klient_ połączy wyniki cząstkowe w wektor wynikowy. Wynik zostanie wyświetlony lub zapisany do pliku (w zależności od flagi `-o`).
+
+Każdy z programów może być wykonywany na **innej maszynie**.
