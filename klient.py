@@ -16,6 +16,8 @@ parser.add_argument('-k', '--key', type=str,
                     help='Set server key', default='key')
 parser.add_argument('-t', '--tasks', type=int,
                     help='Number of tasks that will be created', default=8)
+parser.add_argument('-o', '--output', type=str,
+                    help='Path to file in which to store results. If not provided vector is just displayed.')
 parser.add_argument('matrix', type=str, help='Path to file with input matrix')
 parser.add_argument('vector', type=str, help='Path to file with input vector')
 args = parser.parse_args()
@@ -128,5 +130,12 @@ while not results_queue.empty():
         i, value = job_result
         result[i] = value
 
-print('Output vector:')
-print(result)
+if not args.output:
+    print('Output vector:')
+    print(result)
+else:
+    with open(args.output, 'w') as file:
+        file.write(str(len(result)) + '\n')
+        file.write('1\n')
+        for v in result:
+            file.write(str(v) + '\n')
