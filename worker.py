@@ -4,7 +4,8 @@
 
 from multiprocessing.managers import BaseManager
 from multiprocessing import Pool
-from time import sleep
+import queue
+from sys import exit
 from typing import Tuple, List
 
 # TODO: Load as parameters
@@ -49,23 +50,25 @@ def process_job(job: Tuple[int, List[float]]) -> Tuple[int, float]:
     return (job[0], result)
 
 
+# print(tasks_queue.task_done())
+
 # Create subprocess for each CPU core/thread
-pool = Pool()
+with Pool() as pool:
+    while not tasks_queue.empty():
+        try:
+            task = tasks_queue.get()
+        except queue.Empty:
+            exit(0)
 
-while not tasks_queue.empty():
-    task = tasks_queue.get()
+        # Simulate task processing
+        print('Working on task')
+        print(task)
+        # sleep(1)
+        finished_jobs = pool.map(process_job, task)
+        print('Task done')
 
-    # Simulate task processing
-    print('Working on task')
-    print(task)
-    # sleep(1)
-    finished_jobs = pool.map(process_job, task)
-    print('Task done')
+        print(finished_jobs)
+        print()
 
-    print(finished_jobs)
-    print()
-
-    results_queue.put(finished_jobs)
-    tasks_queue.task_done()
-
-pool.close()
+        results_queue.put(finished_jobs)
+        tasks_queue.task_done()
