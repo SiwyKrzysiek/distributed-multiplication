@@ -71,4 +71,4 @@ with Pool() as pool:
         results_queue.put(finished_jobs)
         tasks_queue.task_done()
 
-print('No more task to precess. Exiting...')
+print('No more task to process. Exiting...')
