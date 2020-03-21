@@ -74,6 +74,7 @@ except ConnectionRefusedError:
     exit(-1)
 
 tasks_queue = manager.get_tasks_queue()
+results_queue = manager.get_results_queue()
 vektor = manager.get_vector()
 
 # TODO: Load data, create tasks and enqueue them
@@ -82,13 +83,6 @@ matrix = loadMatrix(MATRIX_FILE_NAME)
 # Save vector to shared memory
 vektor.clear()
 vektor.extend(loadMatrix(VECTOR_FILE_NAME))
-
-# print(len(matrix))
-# print(len(matrix[0]))
-# print(matrix)
-
-# print(len(manager.get_vector()))
-# print(vektor.copy()[:10])
 
 # ---------- Create tasks ---------- #
 # Matrix will be divided into groups of rows to multiply
@@ -101,16 +95,23 @@ def create_tasks(matrix, taks_count) -> Iterable[tuple]:
         yield [(j, matrix[j]) for j in range(*row_range)]
 
 
-# TODO: Iterate once
-tasks = list(create_tasks(matrix, TASK_COUNT))
 print("Created tasks:")
-for task in tasks:
+for task in create_tasks(matrix, TASK_COUNT):
     print(task)
     tasks_queue.put(task)
-
-# TODO: Readable and wait for all results
 
 print("Waiting for workers to process tasks")
 tasks_queue.join()
 
 print('All tasks are done')
+
+# Join results to output vector
+result = [0] * len(matrix)
+while not results_queue.empty():
+    task_result = results_queue.get()
+    for job_result in task_result:
+        i, value = job_result
+        result[i] = value
+
+print('Output vector:')
+print(result)
