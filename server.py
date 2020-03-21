@@ -2,10 +2,21 @@
 
 from multiprocessing import Queue, JoinableQueue
 from multiprocessing.managers import BaseManager
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-p', '--port', type=int,
+                    help='Set server port', default=2332)
+parser.add_argument('-k', '--key', type=str,
+                    help='Set server key', default='key')
+args = parser.parse_args()
 
 # Server settings
-SERVER_PORT = 2332
-SERVER_KEY = b'key'
+SERVER_PORT = args.port
+SERVER_KEY = args.key.encode()
+
+print(
+    f'Starting server on port {SERVER_PORT} with key "{SERVER_KEY.decode()}"')
 
 
 class CalculationManager(BaseManager):
