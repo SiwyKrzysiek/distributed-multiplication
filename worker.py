@@ -36,12 +36,17 @@ tasks_queue = manager.get_tasks_queue()
 results_queue = manager.get_results_queue()
 vector = manager.get_vector().copy()
 
+vector = [v[0] for v in vector]  # Flatten vector
+
+print('vector: ' + str(vector))
+
 
 def process_job(job: Tuple[int, List[float]]) -> Tuple[int, float]:
     """Process single job from task"""
     global vector
 
-    return (job[0], 17.)
+    result = sum(p[0] * p[1] for p in zip(job[1], vector))
+    return (job[0], result)
 
 
 # Create subprocess for each CPU core/thread
