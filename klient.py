@@ -13,8 +13,8 @@ SERVER_PORT = 2332
 SERVER_KEY = b'key'
 
 # File data
-MATRIX_FILE_NAME = 'A.dat'
-VECTOR_FILE_NAME = 'X.dat'
+MATRIX_FILE_NAME = 'smallA.dat'
+VECTOR_FILE_NAME = 'smallX.dat'
 
 TASK_COUNT = 5
 
@@ -103,20 +103,14 @@ def create_tasks(matrix, taks_count) -> Iterable[tuple]:
 
 # TODO: Iterate once
 tasks = list(create_tasks(matrix, TASK_COUNT))
+print("Created tasks:")
 for task in tasks:
+    print(task)
     tasks_queue.put(task)
 
-# print(len(tasks))
-# for task in tasks:
-#     jobs = task[:5]
-#     for job in jobs:
-#         pass
-#         print(type(job))
-#         # print(job[1])
-#         print(f'({job[0]}, {job[1][:10]}...)')
-
 # TODO: Readable and wait for all results
-# print(dir(tasks_queue))
+
+print("Waiting for workers to process tasks")
 tasks_queue.join()
 
 print('All tasks are done')

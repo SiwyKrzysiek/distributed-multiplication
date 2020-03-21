@@ -1,4 +1,6 @@
 # Process responsible for processing tasks
+# Each tasks contains multiple jobs. Each job is a row of input matrix that needs to be
+# multiplied by vector
 
 from multiprocessing.managers import BaseManager
 from time import sleep
@@ -30,7 +32,7 @@ except ConnectionRefusedError:
 
 tasks_queue = manager.get_tasks_queue()
 results_queue = manager.get_results_queue()
-vektor = manager.get_vector()
+vector = manager.get_vector().copy()
 
 while not tasks_queue.empty():
     task = tasks_queue.get()
