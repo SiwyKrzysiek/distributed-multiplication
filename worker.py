@@ -8,6 +8,7 @@ import queue
 from sys import exit
 from typing import Tuple, List
 import argparse
+from functools import partial
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-a', '--address', type=str,
@@ -50,9 +51,8 @@ vector = manager.get_vector().copy()
 vector = [v[0] for v in vector]  # Flatten vector
 
 
-def process_job(job: Tuple[int, List[float]]) -> Tuple[int, float]:
+def process_job(job: Tuple[int, List[float]], vector: List[float]) -> Tuple[int, float]:
     """Process single job from task"""
-    global vector
 
     result = sum(p[0] * p[1] for p in zip(job[1], vector))
     return (job[0], result)
@@ -69,7 +69,8 @@ with Pool() as pool:
         # print('Working on task')
         # print(task)
         # sleep(1)
-        finished_jobs = pool.map(process_job, task)
+        f = partial(process_job, vector=vector)
+        finished_jobs = pool.map(f, task)
         # print('Task done')
 
         # print(finished_jobs)
@@ -77,3 +78,5 @@ with Pool() as pool:
 
         results_queue.put(finished_jobs)
         tasks_queue.task_done()
+
+print('No more task to precess. Exiting...')
