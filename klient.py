@@ -70,14 +70,13 @@ manager = CalculationManager(
 try:
     manager.connect()
 except ConnectionRefusedError:
-    print("Nie udało się połączyć z serwerem")
+    print("Can't connect to the server")
     exit(-1)
 
 tasks_queue = manager.get_tasks_queue()
 results_queue = manager.get_results_queue()
 vektor = manager.get_vector()
 
-# TODO: Load data, create tasks and enqueue them
 matrix = loadMatrix(MATRIX_FILE_NAME)
 
 # Save vector to shared memory
@@ -95,9 +94,9 @@ def create_tasks(matrix, taks_count) -> Iterable[tuple]:
         yield [(j, matrix[j]) for j in range(*row_range)]
 
 
-print("Created tasks:")
+# print("Created tasks:")
 for task in create_tasks(matrix, TASK_COUNT):
-    print(task)
+    # print(task)
     tasks_queue.put(task)
 
 print("Waiting for workers to process tasks")

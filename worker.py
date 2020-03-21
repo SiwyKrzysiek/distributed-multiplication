@@ -36,10 +36,7 @@ except ConnectionRefusedError:
 tasks_queue = manager.get_tasks_queue()
 results_queue = manager.get_results_queue()
 vector = manager.get_vector().copy()
-
 vector = [v[0] for v in vector]  # Flatten vector
-
-print('vector: ' + str(vector))
 
 
 def process_job(job: Tuple[int, List[float]]) -> Tuple[int, float]:
@@ -50,8 +47,6 @@ def process_job(job: Tuple[int, List[float]]) -> Tuple[int, float]:
     return (job[0], result)
 
 
-# print(tasks_queue.task_done())
-
 # Create subprocess for each CPU core/thread
 with Pool() as pool:
     while not tasks_queue.empty():
@@ -60,15 +55,14 @@ with Pool() as pool:
         except queue.Empty:
             exit(0)
 
-        # Simulate task processing
-        print('Working on task')
-        print(task)
+        # print('Working on task')
+        # print(task)
         # sleep(1)
         finished_jobs = pool.map(process_job, task)
-        print('Task done')
+        # print('Task done')
 
-        print(finished_jobs)
-        print()
+        # print(finished_jobs)
+        # print()
 
         results_queue.put(finished_jobs)
         tasks_queue.task_done()
