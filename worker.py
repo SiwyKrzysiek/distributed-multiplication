@@ -17,12 +17,16 @@ parser.add_argument('-p', '--serverPort', type=int,
                     help='Set server port', default=2332)
 parser.add_argument('-k', '--key', type=str,
                     help='Set server key', default='key')
+parser.add_argument('-e', '--endless', action="store_true",
+                    help='Don\'t stop when there are no tasks')
 args = parser.parse_args()
 
 # Server connection data
 SERVER_ADRES = args.address
 SERVER_PORT = args.serverPort
 SERVER_KEY = args.key.encode()
+
+LOOP = True if args.endless else False
 
 
 class CalculationManager(BaseManager):
@@ -59,7 +63,7 @@ def process_job(job: Tuple[int, List[float]], vector: List[float]) -> Tuple[int,
 
 # Create subprocess for each CPU core/thread
 with Pool() as pool:
-    while not tasks_queue.empty():
+    while LOOP or not tasks_queue.empty():
         try:
             task = tasks_queue.get()
         except queue.Empty:
