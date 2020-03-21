@@ -31,7 +31,6 @@ class CalculationManager(BaseManager):
 
 CalculationManager.register('get_tasks_queue')
 CalculationManager.register('get_results_queue')
-
 CalculationManager.register('get_vector')
 
 manager = CalculationManager(
@@ -66,15 +65,8 @@ with Pool() as pool:
         except queue.Empty:
             exit(0)
 
-        # print('Working on task')
-        # print(task)
-        # sleep(1)
         f = partial(process_job, vector=vector)
         finished_jobs = pool.map(f, task)
-        # print('Task done')
-
-        # print(finished_jobs)
-        # print()
 
         results_queue.put(finished_jobs)
         tasks_queue.task_done()
