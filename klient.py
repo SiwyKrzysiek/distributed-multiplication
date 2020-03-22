@@ -6,6 +6,7 @@ from multiprocessing.managers import BaseManager
 from typing import List, Tuple, Iterable
 import math
 import argparse
+import time
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-a', '--address', type=str,
@@ -95,12 +96,18 @@ results_queue = manager.get_results_queue()
 vektor = manager.get_vector()
 
 print(f'Loading matrix from file {MATRIX_FILE_NAME}')
+start = time.time()
 matrix = loadMatrix(MATRIX_FILE_NAME)
+matrix_load_time = time.time() - start
+print(f'Loading matrix took {matrix_load_time} s')
 
 # Save vector to shared memory
 print(f'Loading vector from file {VECTOR_FILE_NAME}')
 vektor.clear()
+start = time.time()
 vektor.extend(loadMatrix(VECTOR_FILE_NAME))
+vector_load_time = time.time() - start
+print(f'Loading vector took {vector_load_time} s')
 
 # ---------- Create tasks ---------- #
 # Matrix will be divided into groups of rows to multiply
@@ -114,21 +121,30 @@ def create_tasks(matrix, taks_count) -> Iterable[tuple]:
 
 
 print(f"Splitting calculation into {TASK_COUNT} tasks")
+start = time.time()
 for task in create_tasks(matrix, TASK_COUNT):
     tasks_queue.put(task)
+task_creation_time = time.time() - start
+print(f'Creating tasks took {task_creation_time} s')
+start = time.time()
 
-print("Waiting for workers to process tasks")
+print('Waiting for workers to process tasks')
 tasks_queue.join()
+calculation_time = time.time() - start
+print(f'Calculations took {calculation_time} s')
 
 print('All tasks are done')
 
 # Join results to output vector
+start = time.time()
 result = [0] * len(matrix)
 while not results_queue.empty():
     task_result = results_queue.get()
     for job_result in task_result:
         i, value = job_result
         result[i] = value
+result_assemble_time = time.time() - start
+print(f'Assembling result vector took {result_assemble_time} s')
 
 if not args.output:
     print('Output vector:')
