@@ -16,6 +16,11 @@ W zadaniu wykorzystam moduł języka Python - [multiprocessing](https://docs.pyt
   - [Realizacja zadania](#realizacja-zadania)
     - [Model systemu](#model-systemu)
     - [Przykład działania](#przykład-działania)
+    - [Pomiary](#pomiary)
+      - [Czas wykonania mnożeń](#czas-wykonania-mnożeń)
+      - [Porównanie obliczenia na wielu maszynach z obliczeniami na jednej](#porównanie-obliczenia-na-wielu-maszynach-z-obliczeniami-na-jednej)
+      - [Zbadanie prawa Amdhala](#zbadanie-prawa-amdhala)
+    - [Wnioski](#wnioski)
 
 ## Opis zadania
 
@@ -144,3 +149,38 @@ python3 worker.py -a 127.0.0.1 -e
 Po przetworzeniu wszystkich zadań _Klient_ połączy wyniki cząstkowe w wektor wynikowy. Wynik zostanie wyświetlony lub zapisany do pliku (w zależności od flagi `-o`).
 
 Każdy z programów może być wykonywany na **innej maszynie**.
+
+### Pomiary
+
+#### Czas wykonania mnożeń
+
+Pomiary czasów wykonania kolejnych etapów w zależności od liczby zadań, na jaką zostanie podzielone główne zadanie obliczeniowe.
+
+| Lizba zadań | Czas tworzenia zadań [s] | Czas obliczeń [s]   | Czas połączenia wyników [s] |
+| ----------- | ------------------------ | ------------------- | --------------------------- |
+| 2           | 0.1837749481201172       | 0.38793110847473145 | 0.0015811920166015625       |
+| 4           | 0.2599449157714844       | 0.18340682983398438 | 0.0017991065979003906       |
+| 8           | 0.2220301628112793       | 0.2466878890991211  | 0.019262075424194336        |
+| 20          | 0.21198391914367676      | 0.18560481071472168 | 0.005330801010131836        |
+| 50          | 0.21490788459777832      | 0.20556020736694336 | 0.00910496711730957         |
+| 100         | 0.19277095794677734      | 0.2568790912628174  | 0.015871047973632812        |
+| 500         | 0.22638416290283203      | 0.3589460849761963  | 0.07500481605529785         |
+| 1000        | 0.3039872646331787       | 0.4904651641845703  | 0.1397550106048584          |
+
+#### Porównanie obliczenia na wielu maszynach z obliczeniami na jednej
+
+Niestety nie mam dostępu do wielu maszyn. Przy próbie zalogowania się na serwer `pri2` hasło jest odrzucane, mimo że to samo hasło jest poprawne na maszynie `pri`.
+
+#### Zbadanie prawa Amdhala
+
+To zbadania tego prawa uruchomię program `worker.py` z różną liczbą podprocesów i sprawdzę czy wyniki odpowiadają tym przewidzianym przez prawo Amdhala.
+
+<!-- TODO: Zbadanie prawa Amdhala -->
+
+### Wnioski
+
+1. Przy przekazywaniu danych między węzłami należy zadbać o unikanie duplikacji danych, ponieważ spowolni to ich przesył.
+2. Zadania, które można rozłożyć na niezależne podproblemy dobrze nadają się do obliczeń z zastosowaniem _process-based execution_.
+3. Korzystanie z wielu procesów jest mniej wydajne niż z wątków, jednak dzięki zastosowaniu wielu procesów możliwe jest wykonywanie obliczeń rozproszonych sieciowo. Pozwala to na znaczne zwiększenie mocy obliczeniowej wykorzystywanej do rozwiązania problemu.
+4. Warto zastosować algorytmy rozproszone sieciowo gdy jest potrzeba na wykorzystanie większej liczby procesorów niż jest w stanie zaoferować pojedynczy komputer. Przy obliczeniach rozproszonych sieciowo występują dodatkowe narzuty związane ze stosunkowo wolną komunikacją między węzłami, jednak pozwalają one na praktycznie dowolne skalowanie mocy obliczeniowej.
+5. Waga prędkości komunikacji między węzłami jest zależna od tego jak często algorytm wymaga wymiany danych pomiędzy węzłami. Jest to jednak aspekt, na który warto zwrócić szczególną uwagę.
