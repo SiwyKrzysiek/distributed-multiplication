@@ -1,5 +1,7 @@
 # Procesy rozproszone sieciowo
 
+<!-- Repozytorium: https://github.com/SiwyKrzysiek/distributed-multiplication -->
+
 Przetwarzanie równoległe rozproszone bez specjalnych mechanizmów synchronizacji i komunikacji między węzłami. Problem przetwarzania równoległego do rozwiązania - dystrybucja dużego zbioru danych wejściowych.
 
 > Uwaga: wątki w Pythonie nie wykorzystują własności wieloprocesorowych o ile nie zostaną specjalnie zaimplementowane, napisane w sposób rozproszony, ze względu na [Global Interpreter Lock](https://wiki.python.org/moin/GlobalInterpreterLock).
@@ -179,7 +181,26 @@ Niestety nie mam dostępu do wielu maszyn. Przy próbie zalogowania się na serw
 
 To zbadania tego prawa uruchomię program `worker.py` z różną liczbą podprocesów i sprawdzę czy wyniki odpowiadają tym przewidzianym przez prawo Amdhala.
 
-<!-- TODO: Zbadanie prawa Amdhala -->
+Pomiary wykonania zadania w zależności od liczby podprocesów uruchomionych przez Worker.py (flaga `-s`).
+
+| Ilość procesów | Czas wykonania programu | Czas wykonania obliczeń |
+| -------------- | ----------------------- | ----------------------- |
+| 1              | 1.3075010776519775      | 0.4550001621246338      |
+| 2              | 1.1031179428100586      | 0.22890996932983398     |
+| 3              | 1.0929396152496338      | 0.21912002563476562     |
+| 4              | 1.0899121761322021      | 0.2120060920715332      |
+
+Wykonanie dla jednego procesu pozwala obliczyć proporcję programu, która może ulec zrównolegleniu.  
+P = 0.4550001621246338 / 1.3075010776519775 ≃ 0.34799218899438866
+
+| Ilość procesów | Wartość prawa Amdhala | Faktyczne przyśpieszenie |
+| -------------- | --------------------- | ------------------------ |
+| 1              | 1.0                   | 1.0                      |
+| 2              | 1.2106480288265458    | 1.1852776814791697       |
+| 3              | 1.3020745047645286    | 1.1963159349415078       |
+| 4              | 1.3531692459953584    | 1.1996389308099469       |
+
+Faktyczny zysk jest mniejszy niż ten przewidziany przez prawo Amdhala. Może to wynikać z narzutów powstałych w wyniku komunikacji sieciowej.
 
 ### Wnioski
 
