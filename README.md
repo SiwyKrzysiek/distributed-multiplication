@@ -115,7 +115,7 @@ optional arguments:
 Przykładowe uruchomienie
 
 ```bash
-python3 klient.py A.dat X.dat -t 20 -a 127.0.0.1
+python3 klient.py A.dat X.dat -t 20 -a 127.0.0.1 -o C.dat
 ```
 
 Ostatnim procesem jest uruchomienie dowolnej liczby wrokerów.
