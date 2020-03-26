@@ -3,7 +3,7 @@
 # multiplied by vector
 
 from multiprocessing.managers import BaseManager
-from multiprocessing import Pool
+from multiprocessing import Pool, cpu_count
 import queue
 from sys import exit
 from typing import Tuple, List
@@ -19,6 +19,8 @@ parser.add_argument('-k', '--key', type=str,
                     help='Set server key', default='key')
 parser.add_argument('-e', '--endless', action="store_true",
                     help='Don\'t stop when there are no tasks')
+parser.add_argument('-s', '--subprocesses', type=int,
+                    help='Set number of subprocess used. Defaults to core count', default=cpu_count())
 args = parser.parse_args()
 
 # Server connection data
@@ -26,6 +28,7 @@ SERVER_ADRES = args.address
 SERVER_PORT = args.serverPort
 SERVER_KEY = args.key.encode()
 
+SUBPROCESS_COUNT = args.subprocesses
 LOOP = True if args.endless else False
 
 
@@ -62,7 +65,7 @@ def process_job(job: Tuple[int, List[float]], vector: List[float]) -> Tuple[int,
 
 
 # Create subprocess for each CPU core/thread
-with Pool() as pool:
+with Pool(SUBPROCESS_COUNT) as pool:
     while LOOP or not tasks_queue.empty():
         try:
             task = tasks_queue.get()

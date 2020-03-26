@@ -120,9 +120,10 @@ Ostatnim procesem jest uruchomienie dowolnej liczby wrokerów.
 
 Worker przyjmuje adres serwera.
 
-```bash
+```txt
 ➜ python3 worker.py -h
 usage: worker.py [-h] [-a ADDRESS] [-p SERVERPORT] [-k KEY] [-e]
+                 [-s SUBPROCESSES]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -132,6 +133,9 @@ optional arguments:
                         Set server port
   -k KEY, --key KEY     Set server key
   -e, --endless         Don't stop when there are no tasks
+  -s SUBPROCESSES, --subprocesses SUBPROCESSES
+                        Set number of subprocess used. Defaults to core count
+
 ```
 
 Przykładowe uruchomienie
