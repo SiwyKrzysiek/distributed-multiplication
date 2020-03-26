@@ -8,6 +8,8 @@ import math
 import argparse
 import time
 
+start_time = time.time()
+
 parser = argparse.ArgumentParser()
 parser.add_argument('-a', '--address', type=str,
                     help='Select server address. Defaults to localhost', default='127.0.0.1')
@@ -155,3 +157,5 @@ else:
         file.write('1\n')
         for v in result:
             file.write(str(v) + '\n')
+
+print(f'\nWhole execution took {time.time() - start_time} s')
